@@ -27,10 +27,16 @@ if (_weapon == primaryWeapon _player && {_weapon != ""}) then {
 
 _listedItemClasses = [];
 
-_actions = [localize "STR_ACE_Captives_FriskMenuHeader", ""] call ACE_Interaction_fnc_prepareSelectMenu;
+_actions = [localize "STR_ACE_Captives_FriskMenuHeader", "Take item"] call ACE_Interaction_fnc_prepareSelectMenu;/*"Take item" is a example, will have to add to the string table*/
 
 _allGear = [];
 
+if ((primaryWeapon _unit) != "") then {
+  _allGear pushBack (primaryWeapon _unit);
+};
+if ((secondaryWeapon _unit) != "") then {
+  _allGear pushBack (secondaryWeapon _unit);
+};
 if ((handgunWeapon _unit) != "") then {
     _allGear pushBack (handgunWeapon _unit);
 };
@@ -47,6 +53,8 @@ if (count (assignedItems _unit) > 0) then {
     _allGear = _allGear + (assignedItems _unit);
 };
 
+// Primary Weapon
+// Secondary Weapon
 // Handgun
 // Uniform Items
 // Vest Items
@@ -64,7 +72,4 @@ if (count (assignedItems _unit) > 0) then {
     };
 } forEach (_allGear);
 
-[_actions, {call ACE_Interaction_fnc_hideMenu;}, {call ACE_Interaction_fnc_hideMenu;}] call ACE_Interaction_fnc_openSelectMenu;
-
-// don't need an "Ok" Button
-ctrlShow [8860, false];
+[_actions, {[ACE_player,_this] call Ace_Captives_fnc_removeFriskItem;call ACE_Interaction_fnc_hideMenu;}, {call ACE_Interaction_fnc_hideMenu;}] call ACE_Interaction_fnc_openSelectMenu;
